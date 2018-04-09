@@ -51,6 +51,7 @@ class BuildElftoolchain(Project):
         # TODO: build static?
         if self.build_static:
             self.make_args.set(LDSTATIC="-static")
+        self.make_args.set(NOGCCERROR=1)
         self.make_args.set(WITH_TESTS="no", WITH_PE="no", WITH_DOCUMENTATION="no")
         # HACK: we don't want the binaries to depend on libelftc.so because the build system doesn't handle rpath
         # setting SHLIB_FULLVERSION to empty is a hack to prevent building of shared libraries
