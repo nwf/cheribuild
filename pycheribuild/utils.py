@@ -432,7 +432,8 @@ def latest_system_clang_tool(basename: str, fallback_basename: str) -> Path:
 
     # Only search in /usr/bin/ and /usr/local/bin by default.
     # If users want to use other versions they should explicitly pass --cc-path, etc
-    search_path = [Path("/usr/local/bin"), Path("/usr/bin")]
+    search_path = [Path("/usr/lib/ccache"), Path("/usr/local/bin"), Path("/usr/bin")]
+
     valid_regex = re.compile(re.escape(basename) + r"[-\d.]*$")
     results = []
     for search_dir in search_path:

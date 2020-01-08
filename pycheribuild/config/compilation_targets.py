@@ -65,14 +65,20 @@ class _ClangBasedTargetInfo(TargetInfo, metaclass=ABCMeta):
 
     @property
     def c_compiler(self) -> Path:
+        if (self._compiler_dir / "ccache-clang").exists() :
+            return self._compiler_dir / "ccache-clang"
         return self._compiler_dir / "clang"
 
     @property
     def cxx_compiler(self) -> Path:
+        if (self._compiler_dir / "ccache-clang++").exists() :
+            return self._compiler_dir / "ccache-clang++"
         return self._compiler_dir / "clang++"
 
     @property
     def c_preprocessor(self) -> Path:
+        if (self._compiler_dir / "ccache-clang-cpp").exists() :
+            return self._compiler_dir / "ccache-clang-cpp"
         return self._compiler_dir / "clang-cpp"
 
     @property
