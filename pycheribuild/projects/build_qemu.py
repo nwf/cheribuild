@@ -132,6 +132,8 @@ class BuildQEMUBase(AutotoolsProject):
         if self.config.verbose:
             self.make_args.set(V=1)
 
+        self.configureArgs.append("--enable-virtfs")
+
     def setup(self):
         super().setup()
         compiler = self.CC
