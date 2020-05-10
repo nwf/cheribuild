@@ -49,6 +49,7 @@ class OpamMixin(object):
         self.add_required_system_tool("opam", homebrew="opam",
                                       cheribuild_target="opam-2.0")  # pytype: disable=attribute-error
         self.required_ocaml_version = "4.06.1"
+        self.opam_switch = "sail"
         self.__using_correct_switch = False
         self.__ignore_switch_version = False
 
@@ -75,7 +76,7 @@ class OpamMixin(object):
     def _opam_cmd(self, command, *args, _add_switch=True):
         cmdline = [self.opam_binary, command, "--root=" + str(self.opamroot)]
         if _add_switch:
-            cmdline.append("--switch=" + self.required_ocaml_version)
+            cmdline.append("--switch=" + self.opam_switch)
         cmdline.extend(args)
         return cmdline
 
@@ -86,11 +87,13 @@ class OpamMixin(object):
         if not self.__using_correct_switch and not self.__ignore_switch_version:
             self.__ignore_switch_version = True
             try:
-                self.run_opam_cmd("switch", self.required_ocaml_version, _add_switch=False)
+                self.run_opam_cmd("switch", self.opam_switch, _add_switch=False)
             except CalledProcessError:
                 # create the switch if it doesn't exist
-                self.run_opam_cmd("switch", "--verbose", "--debug", "create", self.required_ocaml_version,
-                                  _add_switch=False)
+                # self.run_opam_cmd("switch", "--verbose", "--debug", "create", self.opam_switch, self.required_ocaml_version,
+                #                  _add_switch=False)
+                self.run_opam_cmd("switch", "export", "--switch=default", str(self.opamroot / "default-export"), _add_switch=False)
+                self.run_opam_cmd("switch", "import", str(self.opamroot / "default-export"), _add_switch=True)
             finally:
                 self.__ignore_switch_version = False
             self.__using_correct_switch = True
