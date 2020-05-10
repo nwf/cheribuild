@@ -118,14 +118,15 @@ class OpamMixin(object):
 
         self._ensure_correct_switch()
         opam_env = dict(GIT_TEMPLATE_DIR="",  # see https://github.com/ocaml/opam/issues/3493
-                        OPAMROOT=self.opamroot, CCACHE_DISABLE=1,  # https://github.com/ocaml/opam/issues/3395
+                        OPAMROOT=self.opamroot,
                         PATH=self.config.dollarPathWithOtherTools)
         if Path(self.opam_binary).is_absolute():
             opam_env["OPAM_USER_PATH_RO"] = Path(self.opam_binary).parent
         if not (self.opamroot / "opam-init").exists():
             # noinspection PyUnresolvedReferences
-            self.run_cmd(self.opam_binary, "init", "--root=" + str(self.opamroot), "--no-setup", cwd="/",
-                         env=opam_env)  # pytype: disable=attribute-error
+            self.run_cmd(self.opam_binary, "init", "--root=" + str(self.opamroot), "--no-setup", 
+			 "--disable-sandboxing",
+			 cwd="/", env=opam_env)  # pytype: disable=attribute-error
         return opam_env, cwd
 
     def run_in_ocaml_env(self, command: str, cwd=None, print_verbose_only=False, **kwargs):
@@ -326,7 +327,7 @@ class BuildSailRISCV(ProjectUsingOpam):
 
     def __init__(self, config):
         super().__init__(config)
-        self._addRequiredSystemHeader("gmp.h", homebrew="gmp", apt="libgmp-dev")
+        # self._addRequiredSystemHeader("gmp.h", homebrew="gmp", apt="libgmp-dev")
 
     @classmethod
     def setup_config_options(cls, **kwargs):
@@ -359,7 +360,7 @@ class BuildSailCheriRISCV(ProjectUsingOpam):
 
     def __init__(self, config):
         super().__init__(config)
-        self._addRequiredSystemHeader("gmp.h", homebrew="gmp", apt="libgmp-dev")
+        # self._addRequiredSystemHeader("gmp.h", homebrew="gmp", apt="libgmp-dev")
 
     @classmethod
     def setup_config_options(cls, **kwargs):
